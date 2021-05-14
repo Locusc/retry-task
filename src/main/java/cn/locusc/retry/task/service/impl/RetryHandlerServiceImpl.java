@@ -12,6 +12,7 @@ import com.alibaba.fastjson.parser.Feature;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -107,7 +108,7 @@ public class RetryHandlerServiceImpl implements RetryHandlerService {
     private void afterUpgradeTask(RetryTask retryTask) {
         RetryTask upgradeTask = new RetryTask();
         upgradeTask.setId(retryTask.getId());
-        upgradeTask.setCurrentAttempts(retryTask.getCurrentAttempts() + 1);
+        upgradeTask.setCurrentAttempts(retryTask.getCurrentAttempts() + NumberUtils.INTEGER_ONE);
         upgradeTask.setUpdateDate(new Date());
         upgradeTask.setRetryStatus(retryTask.getRetryStatus());
         upgradeTask.setResponseData(retryTask.getResponseData());
@@ -185,7 +186,10 @@ public class RetryHandlerServiceImpl implements RetryHandlerService {
 
         try {
             // 类名
-            String className = StringUtils.substring(classPath, classPath.lastIndexOf(".") + 1);
+            String className = StringUtils.substring(
+                    classPath,
+                    classPath.lastIndexOf(".") + NumberUtils.INTEGER_ONE
+            );
 
             // 判断该重试方法类是否在spring中
             boolean b = springUtil.containsBean(StringUtils.uncapitalize(className));

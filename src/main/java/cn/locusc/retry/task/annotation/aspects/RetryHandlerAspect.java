@@ -23,7 +23,7 @@ public class RetryHandlerAspect {
     @Resource
     private RetryHandlerComponent retryHandlerComponent;
 
-    @Pointcut("@annotation(com.hrfax.presys.busi.retry.annotation.RetryHandler)")
+    @Pointcut("@annotation(cn.locusc.retry.task.annotation.RetryHandler)")
     private void pointcutMethod() { }
 
     @Around(value = "@annotation(retryHandler)")

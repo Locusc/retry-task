@@ -74,7 +74,7 @@ public class RetryHandlerComponent {
         RetryTask retryTask = new RetryTask();
 
         Date date = new Date();
-        retryTask.setIsDel(0);
+        retryTask.setIsDel(NumberUtils.INTEGER_ZERO);
         // 任务名称
         retryTask.setTaskName(retryHandler.taskName());
         // 方法信息
@@ -116,9 +116,9 @@ public class RetryHandlerComponent {
         // 创建时间
         retryTask.setCreateDate(date);
         // 当前重试状态
-        retryTask.setRetryStatus(0);
+        retryTask.setRetryStatus(NumberUtils.INTEGER_ZERO);
         // 当前重试次数
-        retryTask.setCurrentAttempts(0);
+        retryTask.setCurrentAttempts(NumberUtils.INTEGER_ZERO);
         // 请求入参
         // retryTask.setRetryParams(this.methodParamsJson(joinPoint).toJSONString());
         // 重试规则
