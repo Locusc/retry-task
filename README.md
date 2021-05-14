@@ -13,7 +13,7 @@
 ```
 
 ### 2.添加定时任务http调用或者注解调用
-```
+```java
     @Resource
     private RetryHandlerService retryHandlerService;
 
@@ -24,7 +24,7 @@
 ```
 
 ### 任务参数设置和使用
-```
+```java
     // 参考注解RetryHandler.java
     @RetryHandler(
             taskName = "接口重试",
