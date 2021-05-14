@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.locusc.retry.task.mapper.RetryTaskMapper">
+  <resultMap id="BaseResultMap" type="cn.locusc.retry.task.domain.RetryTask">
+    <!--@mbg.generated-->
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="MAX_ATTEMPTS" jdbcType="DECIMAL" property="maxAttempts" />
+    <result column="METHOD_INFO" jdbcType="VARCHAR" property="methodInfo" />
+    <result column="RETRY_STATUS" jdbcType="DECIMAL" property="retryStatus" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="CURRENT_ATTEMPTS" jdbcType="DECIMAL" property="currentAttempts" />
+    <result column="MAX_INTERVAL" jdbcType="DECIMAL" property="maxInterval" />
+    <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
+    <result column="PLAT_NO" jdbcType="VARCHAR" property="platNo" />
+    <result column="IS_DEL" jdbcType="DECIMAL" property="isDel" />
+    <result column="RESPONSE_DATA" jdbcType="VARCHAR" property="responseData" />
+    <result column="EXCEPTION_JSON" jdbcType="VARCHAR" property="exceptionJson" />
+    <result column="RETRY_PARAMS" jdbcType="VARCHAR" property="retryParams" />
+    <result column="RETRY_RULE" jdbcType="VARCHAR" property="retryRule" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    ID, MAX_ATTEMPTS, METHOD_INFO, RETRY_STATUS, CREATE_DATE, UPDATE_DATE, CURRENT_ATTEMPTS,
+    MAX_INTERVAL, TASK_NAME, PLAT_NO, IS_DEL, RESPONSE_DATA, EXCEPTION_JSON, RETRY_PARAMS, RETRY_RULE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from RETRY_TASK
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <select id="queryRetryTaskList" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from RETRY_TASK
+    where CURRENT_ATTEMPTS &lt; MAX_ATTEMPTS
+    and IS_DEL = 0 and RETRY_STATUS = 0
+    and to_date(CREATE_DATE) > to_date(SYSDATE-3)
+  </select>
+  <select id="queryRetryTaskListByEntity" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from RETRY_TASK
+    <where>
+      <if test="taskName != null">
+        and TASK_NAME = #{taskName,jdbcType=VARCHAR}
+      </if>
+      <if test="isDel != null">
+        and IS_DEL = #{isDel,jdbcType=INTEGER}
+      </if>
+      <if test="retryStatus != null">
+        and RETRY_STATUS = #{retryStatus,jdbcType=DECIMAL}
+      </if>
+      <if test="methodInfo != null">
+        and METHOD_INFO = #{methodInfo,jdbcType=VARCHAR}
+      </if>
+<!--      <if test="currentAttempts != null">-->
+<!--        and CURRENT_ATTEMPTS = #{currentAttempts,jdbcType=DECIMAL}-->
+<!--      </if>-->
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    <!--@mbg.generated-->
+    delete from RETRY_TASK
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="cn.locusc.retry.task.domain.RetryTask" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    <selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+      SELECT SEQ_RETRY_TASK.nextval from dual
+    </selectKey>
+    insert into RETRY_TASK (ID, MAX_ATTEMPTS, METHOD_INFO, RETRY_STATUS,
+      CREATE_DATE, UPDATE_DATE, CURRENT_ATTEMPTS, 
+      MAX_INTERVAL, TASK_NAME, PLAT_NO, 
+      IS_DEL, RESPONSE_DATA, EXCEPTION_JSON, 
+      RETRY_PARAMS, RETRY_RULE)
+    values (#{id,jdbcType=DECIMAL},#{maxAttempts,jdbcType=DECIMAL}, #{methodInfo,jdbcType=VARCHAR}, #{retryStatus,jdbcType=DECIMAL},
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{currentAttempts,jdbcType=DECIMAL}, 
+      #{maxInterval,jdbcType=DECIMAL}, #{taskName,jdbcType=VARCHAR}, #{platNo,jdbcType=VARCHAR},
+      #{isDel,jdbcType=DECIMAL}, #{responseData,jdbcType=VARCHAR}, #{exceptionJson,jdbcType=VARCHAR}, 
+      #{retryParams,jdbcType=VARCHAR}, #{retryRule,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="ID" keyProperty="id" parameterType="cn.locusc.retry.task.domain.RetryTask" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    <selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+      SELECT SEQ_RETRY_TASK.nextval from dual
+    </selectKey>
+    insert into RETRY_TASK
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="maxAttempts != null">
+        MAX_ATTEMPTS,
+      </if>
+      <if test="methodInfo != null">
+        METHOD_INFO,
+      </if>
+      <if test="retryStatus != null">
+        RETRY_STATUS,
+      </if>
+      <if test="createDate != null">
+        CREATE_DATE,
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE,
+      </if>
+      <if test="currentAttempts != null">
+        CURRENT_ATTEMPTS,
+      </if>
+      <if test="maxInterval != null">
+        MAX_INTERVAL,
+      </if>
+      <if test="taskName != null">
+        TASK_NAME,
+      </if>
+      <if test="platNo != null">
+        PLAT_NO,
+      </if>
+      <if test="isDel != null">
+        IS_DEL,
+      </if>
+      <if test="responseData != null">
+        RESPONSE_DATA,
+      </if>
+      <if test="exceptionJson != null">
+        EXCEPTION_JSON,
+      </if>
+      <if test="retryParams != null">
+        RETRY_PARAMS,
+      </if>
+      <if test="retryRule != null">
+        RETRY_RULE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="maxAttempts != null">
+        #{maxAttempts,jdbcType=DECIMAL},
+      </if>
+      <if test="methodInfo != null">
+        #{methodInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="retryStatus != null">
+        #{retryStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currentAttempts != null">
+        #{currentAttempts,jdbcType=DECIMAL},
+      </if>
+      <if test="maxInterval != null">
+        #{maxInterval,jdbcType=DECIMAL},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="platNo != null">
+        #{platNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=DECIMAL},
+      </if>
+      <if test="responseData != null">
+        #{responseData,jdbcType=VARCHAR},
+      </if>
+      <if test="exceptionJson != null">
+        #{exceptionJson,jdbcType=VARCHAR},
+      </if>
+      <if test="retryParams != null">
+        #{retryParams,jdbcType=VARCHAR},
+      </if>
+      <if test="retryRule != null">
+        #{retryRule,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.locusc.retry.task.domain.RetryTask">
+    <!--@mbg.generated-->
+    update RETRY_TASK
+    <set>
+      <if test="maxAttempts != null">
+        MAX_ATTEMPTS = #{maxAttempts,jdbcType=DECIMAL},
+      </if>
+      <if test="methodInfo != null">
+        METHOD_INFO = #{methodInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="retryStatus != null">
+        RETRY_STATUS = #{retryStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null">
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currentAttempts != null">
+        CURRENT_ATTEMPTS = #{currentAttempts,jdbcType=DECIMAL},
+      </if>
+      <if test="maxInterval != null">
+        MAX_INTERVAL = #{maxInterval,jdbcType=DECIMAL},
+      </if>
+      <if test="taskName != null">
+        TASK_NAME = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="platNo != null">
+        PLAT_NO = #{platNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        IS_DEL = #{isDel,jdbcType=DECIMAL},
+      </if>
+      <if test="responseData != null">
+        RESPONSE_DATA = #{responseData,jdbcType=VARCHAR},
+      </if>
+      <if test="exceptionJson != null">
+        EXCEPTION_JSON = #{exceptionJson,jdbcType=VARCHAR},
+      </if>
+      <if test="retryParams != null">
+        RETRY_PARAMS = #{retryParams,jdbcType=VARCHAR},
+      </if>
+      <if test="retryRule != null">
+        RETRY_RULE = #{retryRule,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.locusc.retry.task.domain.RetryTask">
+    <!--@mbg.generated-->
+    update RETRY_TASK
+    set MAX_ATTEMPTS = #{maxAttempts,jdbcType=DECIMAL},
+      METHOD_INFO = #{methodInfo,jdbcType=VARCHAR},
+      RETRY_STATUS = #{retryStatus,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CURRENT_ATTEMPTS = #{currentAttempts,jdbcType=DECIMAL},
+      MAX_INTERVAL = #{maxInterval,jdbcType=DECIMAL},
+      TASK_NAME = #{taskName,jdbcType=VARCHAR},
+      PLAT_NO = #{platNo,jdbcType=VARCHAR},
+      IS_DEL = #{isDel,jdbcType=DECIMAL},
+      RESPONSE_DATA = #{responseData,jdbcType=VARCHAR},
+      EXCEPTION_JSON = #{exceptionJson,jdbcType=VARCHAR},
+      RETRY_PARAMS = #{retryParams,jdbcType=VARCHAR},
+      RETRY_RULE = #{retryRule,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>
